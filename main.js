@@ -41,15 +41,15 @@ async function start() {
     //curly's law 
     //   First function responsibility is to get or fetch the data
     //   second function responsibility is to create the html select let's have 
-
+}
     function createBreadList(breedlist) {   //data.message from api response.json inputs into breedlist parameter metadata to receive called pizza etc breedlist - take this data and create a drop down list html select drop down 
                                             //create some html that we can hook on to with javascript
-        document.getElementById("breed").innerHTML = "string of quotes say hey"           //this is a method wit parameter metadata id of breed - this is an object that represents that "not empty" div and then let's look inside with a dot
+        //document.getElementById("breed").innerHTML = "string of quotes say hey"           //this is a method wit parameter metadata id of breed - this is an object that represents that "not empty" div and then let's look inside with a dot
                                             //very powerfully overlays or replaces everything inside DIV breed display in html - <div id="breed">
         document.getElementById("breed").innerHTML = `
 
 
-        <select>  
+        <select onchange="loadByBreed(this.value)">   
             <option>Choose a dog breed</option>
             ${Object.keys(breedlist).map(function(breed){
                 return `<option>${breed}</option>`       //does this work ok with message sweparated by commas array converted to text will have commas converts an array to a single piece of text so no separtation between items
@@ -68,4 +68,24 @@ async function start() {
                   //we will pass a parameter in the function called anything breed
                   //EXPLAIN IT LATER .join('')}  SINCE IT MAY NOT BE NEEDED
     }
-}
+
+    async function loadByBreed(breed) {    //we want a fetch but return a promise so we want it to be asynchronous function - uses the key word this points to the element in question abstraction or element that triggered or calling this function
+        if (breed != "Choose a dog breed"){   //nothing happens
+            //const response = await fetch("https://dog.ceo/api/breed/hound/images") //we don't want it to be hardcoded and be static
+            const response = await fetch(`https://dog.ceo/api/breed/${breed}/images`) //we don't want it to be hardcoded we want it dynamic
+            const data = await response.json()
+            //console.log(data)
+            createSlideshow(data.message)
+            //alert(breed)
+        }
+        
+    } //each function must be byte-sized and independent
+
+    function createSlideshow(images) {
+
+        //console.log(images)
+        document.getElementById("slideshow").innerHTML = `
+        <div class="slide" style="background-image: url('https://images.dog.ceo/breeds/boxer/IMG_0002.jpg')"></div>
+        <div class="slide" style="background-image: url('${images[0]}')"></div>
+        `
+    }
